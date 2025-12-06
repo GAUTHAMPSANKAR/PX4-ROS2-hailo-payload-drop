@@ -1,0 +1,27 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+
+# ROS2 / colcon build artifacts (if someone builds here)
+build/
+install/
+log/
+
+# Packaging / dist
+*.egg-info/
+dist/
+
+# Editor / OS junk
+.vscode/
+.idea/
+*.swp
+.DS_Store
+
+# Large / non-source files we do NOT want in repo
+*.hef
+*.bag
+*.mp4
+*.avi
+*.mkv
+*.ulg

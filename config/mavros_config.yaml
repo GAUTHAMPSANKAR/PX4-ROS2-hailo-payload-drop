@@ -1,0 +1,4 @@
+# mavros_config.yaml
+/**:
+  ros__parameters:
+    plugin_denylist: ['odometry']
