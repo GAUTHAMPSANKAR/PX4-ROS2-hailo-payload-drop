@@ -170,3 +170,50 @@ The mission logic is implemented as a deterministic finite-state machine:
 - RPi5 running ROS2 Jazzy + Hailo inference stack.
 - Camera stream forwarded from SITL → RPi for inference.
 - OFFBOARD velocity commands returned back to PX4 via MAVROS.
+## System Overview
+
+Below is a high-level view of the simulation + perception pipeline during a typical HIL test.  
+Gazebo runs PX4 SITL and publishes the camera stream, which is forwarded to the Raspberry Pi 5 for Hailo-accelerated inference and autonomy execution.
+
+<p align="center">
+  <img src="docs/images/full_pipeline_overview.png" width="850"/>
+</p>
+
+
+## Target Detection
+
+The vision stack performs real-time detection of the cylindrical target using a Hailo-accelerated YOLOv8s model.  
+A geometric verification step validates the bounding box, and pixel error is computed for alignment.
+
+<p align="center">
+  <img src="docs/images/target_detection.png" width="500"/>
+</p>
+
+
+## Autonomy Behavior: State Machine Evidence
+
+### Terminal Output (Alignment, Descent, Payload Drop)
+The autonomy node logs each major state transition, including when detection becomes stable, OFFBOARD mode begins, alignment thresholds are met, and payload drop is executed.
+
+<p align="center">
+  <img src="docs/images/terminal.png" width="850"/>
+</p>
+
+### PX4 Mode Timeline (Flight Log)
+PX4 flight review shows the corresponding mode transitions:  
+AUTO.MISSION → LOITER → OFFBOARD → RETURN (post-drop).
+
+<p align="center">
+  <img src="docs/images/flight_log_modes.png" width="850"/>
+</p>
+
+
+## Hardware-in-the-Loop (HIL) Setup
+
+The project was validated in a hardware-in-the-loop workflow:  
+PX4 SITL + Gazebo run on a laptop, while the Raspberry Pi 5 executes perception + autonomy.  
+The screenshot below shows the real test bench.
+
+<p align="center">
+  <img src="docs/images/hil_setup.png" width="850"/>
+</p>
