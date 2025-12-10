@@ -172,8 +172,8 @@ The mission logic is implemented as a deterministic finite-state machine:
 - OFFBOARD velocity commands returned back to PX4 via MAVROS.
 ## System Overview
 
-Below is a high-level view of the simulation + perception pipeline during a typical HIL test.  
-Gazebo runs PX4 SITL and publishes the camera stream, which is forwarded to the Raspberry Pi 5 for Hailo-accelerated inference and autonomy execution.
+Below is a high-level view of the simulation + perception pipeline during HIL test.  
+Gazebo runs PX4 SITL and publishes the camera stream via a ROS Bridge, which is forwarded(only during testing) to the Raspberry Pi 5 for Hailo-accelerated inference and autonomy execution.
 
 <p align="center">
   <img src="docs/images/full_pipeline_overview.png" width="850"/>
@@ -182,7 +182,7 @@ Gazebo runs PX4 SITL and publishes the camera stream, which is forwarded to the 
 
 ## Target Detection
 
-The vision stack performs real-time detection of the cylindrical target using a Hailo-accelerated YOLOv8s model.  
+The vision stack performs real-time detection of the target using a Hailo-accelerated YOLOv8s model.  
 A geometric verification step validates the bounding box, and pixel error is computed for alignment.
 
 <p align="center">
