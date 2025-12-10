@@ -1,7 +1,7 @@
 # PX4 · ROS2 · Hailo — Vision-Assisted Payload Drop
 
 **Vision-assisted autonomous payload delivery for PX4.**  
-PX4 executes a pre-planned search mission while a Raspberry Pi 5 (with a Hailo-8L accelerator) runs a YOLOv8s-based perception pipeline. When the white cylindrical target is detected the stack interrupts the mission, aligns the vehicle using OFFBOARD velocity control, descends to a configured drop altitude, triggers the payload release, and then returns or resumes the mission.
+PX4 executes a pre-planned search mission while a Raspberry Pi 5 (with a Hailo-8L accelerator) runs a YOLOv8s-based perception pipeline. When the required target is detected the stack interrupts the mission, aligns the vehicle using OFFBOARD velocity control, descends to a configured drop altitude, triggers the payload release, and then returns or resumes the mission.
 
 <p align="center">
   <img src="docs/images/hil_demo.gif" alt="Simulation demo" width="800">
