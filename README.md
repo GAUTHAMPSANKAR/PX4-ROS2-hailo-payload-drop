@@ -136,3 +136,37 @@ This software is for **research/education** only.
 
 MIT License — see `LICENSE`.
 
+## Technical Highlights
+
+### 1. Perception Pipeline (YOLOv8s → Hailo-8L)
+- Custom-trained YOLOv8s model converted to a Hailo `.hef` binary.
+- Inference executed on the Raspberry Pi 5 using the Hailo-8L accelerator.
+- Post-processing integrates geometric validation to reduce false positives.
+- A stabilizing EWMA filter and minimum-detections threshold ensure reliable lock-on before alignment begins.
+
+### 2. Deterministic Autonomy Logic (Finite State Machine)
+The mission logic is implemented as a deterministic finite-state machine:
+- **SEARCH:** PX4 flies a preplanned mission (AUTO.MISSION).
+- **DETECT:** Vision node finds the cylindrical target.
+- **INTERRUPT:** Autonomy stack switches PX4 to **OFFBOARD** mode.
+- **ALIGN:** Pixel error is converted into body-frame velocity commands (proportional control + yaw compensation).
+- **DESCENT:** Controlled vertical descent to a configured drop altitude.
+- **DROP:** Payload release is triggered by software.
+- **RESUME/RTL:** Depending on user parameter, PX4 resumes the mission or returns to launch.
+
+### 3. Robust Control Mapping (Pixel Error → Velocity)
+- Image-space pixel error (dx, dy) is mapped to body-frame velocities.
+- Converted to world-frame via real-time yaw from PX4 odometry.
+- Velocity is saturated and filtered to prevent oscillations or aggressive corrections.
+- Descent is independently regulated with a proportional Z-controller.
+
+### 4. Safety & Recovery
+- Time-based “lost-target” counter returns PX4 to AUTO.MISSION if detection is unstable.
+- OFFBOARD mode is only commanded when the vehicle is armed and stable.
+- Payload drop occurs **only** at safe altitude and stable alignment.
+
+### 5. Hardware-in-the-Loop Architecture
+- PX4 SITL + Gazebo Harmonic on laptop.
+- RPi5 running ROS2 Jazzy + Hailo inference stack.
+- Camera stream forwarded from SITL → RPi for inference.
+- OFFBOARD velocity commands returned back to PX4 via MAVROS.
